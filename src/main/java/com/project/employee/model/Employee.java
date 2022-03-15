@@ -31,10 +31,10 @@ public class Employee {
     @Column(name = "lastname")
     private String lastName;
 
-    @Pattern( regexp = "^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$",
-                message = "Invalid Contact Format")
-    @Column(name = "contact")
-    private String contact;
+    @Pattern( regexp = "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
+                message = "Invalid Email Format")
+    @Column(name = "email")
+    private String email;
 
     @JsonFormat(pattern="yyyy-MM-dd")
     @Column(name = "birthday")
@@ -59,14 +59,14 @@ public class Employee {
                      String firstName,
                      String middleName,
                      String lastName,
-                     String contact,
+                     String email,
                      @Past( message = "Your birthday should not be in the future" ) Date birthday,
                      String address ) {
         this.id = id;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
-        this.contact = contact;
+        this.email = email;
         this.birthday = birthday;
         this.address = address;
     }
@@ -95,12 +95,12 @@ public class Employee {
         this.lastName = lastName;
     }
 
-    public String getContact() {
-        return contact;
+    public String getEmail() {
+        return email;
     }
 
-    public void setContact( String contact ) {
-        this.contact = contact;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public @Past( message = "Your birthday should not be in the future" ) Date getBirthday() {
@@ -138,7 +138,7 @@ public class Employee {
                 ", firstName='" + firstName + '\'' +
                 ", middleName='" + middleName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", contact='" + contact + '\'' +
+                ", contact='" + email + '\'' +
                 ", birthday=" + birthday +
                 ", address='" + address + '\'' +
                 ", createdAt=" + createdAt +

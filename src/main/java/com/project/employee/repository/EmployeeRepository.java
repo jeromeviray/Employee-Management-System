@@ -7,14 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-//
-//    @Query(value = "SELECT * FROM employee_management_system.employees " +
-//            "WHERE firstname LIKE concat('%', :query, '%') " +
-//            "OR lastname LIKE concat('%', :query, '%')",
-//            nativeQuery = true
-//    )
-//    Optional<Employee> findByFirstNameOrLastName(@Param("query") String query);
 
     @Query(value = "SELECT * FROM employee_management_system.employees " +
             "WHERE firstname LIKE concat('%', :query, '%') " +
@@ -22,4 +17,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             nativeQuery = true
     )
     Page<Employee> findAllEmployeeByName(@Param("query") String query, Pageable pageable );
+
+    @Override
+    Optional<Employee> findById(Long id);
 }

@@ -33,7 +33,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         getEmployee.setMiddleName( employee.getMiddleName() );
         getEmployee.setAddress( employee.getAddress() );
         getEmployee.setBirthday( employee.getBirthday() );
-        getEmployee.setContact( employee.getContact() );
+        getEmployee.setEmail( employee.getEmail() );
 
         return saveEmployee(getEmployee);
     }
@@ -57,7 +57,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public Employee findById( long id ) {
         Optional<Employee> employee = employeeRepository.findById( id );
-        if(employee.isEmpty()) throw new NotFoundException( String.format( "Employee not found. Employee Id: %s", id ) );
+        if(!employee.isPresent()) throw new NotFoundException( String.format( "Employee not found. Employee Id: %s", id ) );
 
         return employee.get();
 
