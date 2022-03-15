@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,6 +26,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    @PreAuthorize( "hasRole('ROLE_ADMIN')" )
     @RequestMapping( value = EMPLOYEES, method = RequestMethod.POST )
     public ResponseEntity<?> saveEmployee( @Valid @RequestBody Employee employee ) {
         employeeService.saveEmployee( employee );
@@ -56,12 +58,14 @@ public class EmployeeController {
 
     }
 
+    @PreAuthorize( "hasRole('ROLE_ADMIN')" )
     @RequestMapping( value = EMPLOYEES + PATH_VARIABLE_ID, method = RequestMethod.PUT )
     public ResponseEntity<?> updateEmployee( @PathVariable( "id" ) Long id, @Valid @RequestBody Employee employee ) {
         Employee updatedEmployee = employeeService.updateEmployee( id, employee );
 
         return new ResponseEntity<>( updatedEmployee, HttpStatus.OK );
     }
+    @PreAuthorize( "hasRole('ROLE_ADMIN')" )
     @RequestMapping(value = EMPLOYEES+PATH_VARIABLE_ID, method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteEmployee(@PathVariable("id") Long id){
         employeeService.deleteEmployee( id );
@@ -70,7 +74,7 @@ public class EmployeeController {
     private Map<String, Object> getEmployees( String query, Integer page, Integer limit, String sortBy, String orderBy ) {
         Sort sort = orderBy.equalsIgnoreCase( Sort.Direction.ASC.name() ) ? Sort.by( sortBy ).ascending() : Sort.by( sortBy ).descending();
         Pageable pageable = PageRequest.of( page, limit, sort );
-        Page<Employee> employees = employeeService.findAllEmployee( query, pageable );
+        Page<Employee> employees = employeeService.getEmployees( query, pageable );
 
         Map<String, Object> employeeResponse = new HashMap<>();
 

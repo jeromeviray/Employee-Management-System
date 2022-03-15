@@ -32,7 +32,24 @@ public class CustomGlobalException extends ResponseEntityExceptionHandler {
                 request.getDescription(false));
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
-
+    @ExceptionHandler(value = JwtException.class)
+    public ResponseEntity<?> handleJwtException(JwtException exception, WebRequest request){
+        ApiError apiError = new ApiError( new Date(),
+                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN,
+                exception.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+    }
+    @ExceptionHandler(value = AuthenticatingCredentialsException.class)
+    public ResponseEntity<?> handleAuthenticatingCredentialsException(AuthenticatingCredentialsException exception, WebRequest request){
+        ApiError apiError = new ApiError( new Date(),
+                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN,
+                exception.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+    }
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid( MethodArgumentNotValidException ex,
                                                                    HttpHeaders headers,
@@ -49,4 +66,5 @@ public class CustomGlobalException extends ResponseEntityExceptionHandler {
         apiError.addValidationError( ex.getBindingResult().getGlobalErrors() );
         return new ResponseEntity<>( apiError, HttpStatus.BAD_REQUEST );
     }
+
 }

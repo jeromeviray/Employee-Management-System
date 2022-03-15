@@ -11,9 +11,9 @@ public interface EmployeeService {
 
     void deleteEmployee( long id );
 
-    Page<Employee> findAllEmployee( String query, Pageable pageable );
+    Page<Employee> getEmployees( String query, Pageable pageable );
 
 //    Employee findEmployeeByName(String name);
 
-    Employee findById(long id);
+    Employee getEmployeeById( long id);
 }

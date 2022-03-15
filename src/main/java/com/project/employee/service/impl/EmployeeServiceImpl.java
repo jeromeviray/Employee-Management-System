@@ -26,7 +26,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public Employee updateEmployee( long id, Employee employee ) {
 
-        Employee getEmployee = findById( id );
+        Employee getEmployee = getEmployeeById( id );
 
         getEmployee.setFirstName( employee.getFirstName() );
         getEmployee.setLastName( employee.getLastName() );
@@ -40,11 +40,11 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public void deleteEmployee( long id ) {
-        employeeRepository.deleteById( findById( id ).getId() );
+        employeeRepository.deleteById( getEmployeeById( id ).getId() );
     }
 
     @Override
-    public Page<Employee> findAllEmployee( String query, Pageable pageable ) {
+    public Page<Employee> getEmployees( String query, Pageable pageable ) {
         Page<Employee> employees = employeeRepository.findAllEmployeeByName( query, pageable );
         return new PageImpl<>(employees.getContent(), pageable, employees.getTotalElements());
     }
@@ -55,7 +55,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 //    }
 
     @Override
-    public Employee findById( long id ) {
+    public Employee getEmployeeById( long id ) {
         Optional<Employee> employee = employeeRepository.findById( id );
         if(!employee.isPresent()) throw new NotFoundException( String.format( "Employee not found. Employee Id: %s", id ) );
 
