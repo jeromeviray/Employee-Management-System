@@ -1,10 +1,7 @@
 package com.project.websecurity.filter.authorization;
 
-import com.project.BeanUtils;
 import com.project.execption.JwtException;
-import com.project.websecurity.impl.UserDetailsServiceImpl;
 import com.project.websecurity.jwtUtil.provider.JwtProvider;
-import com.project.websecurity.jwtUtil.provider.impl.JwtProviderImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,17 +21,21 @@ import java.io.IOException;
 import static com.project.common.contants.AppConstant.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
     Logger logger = LoggerFactory.getLogger( CustomAuthorizationFilter.class );
 
-    private JwtProvider jwtProvider = BeanUtils.getBean( JwtProviderImpl.class );
+    private JwtProvider jwtProvider;
 
-    private UserDetailsService userDetailsService = BeanUtils.getBean( UserDetailsServiceImpl.class );
+    private UserDetailsService userDetailsService;
+
+    public CustomAuthorizationFilter( JwtProvider jwtProvider, UserDetailsService userDetailsService ) {
+        this.jwtProvider = jwtProvider;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     protected void doFilterInternal( HttpServletRequest request, HttpServletResponse response, FilterChain filterChain ) throws ServletException, IOException {
-        if( request.getServletPath().equals( ENDPOINT_VERSION_ONE+LOGIN_ENDPOINT ) || request.getServletPath().equals( ENDPOINT_VERSION_ONE+ACCOUNTS )) {
+        if( request.getServletPath().equals( ENDPOINT_VERSION_ONE.concat( REQUEST_TOKEN ) )) {
             filterChain.doFilter( request, response );
         }else{
             String token = resolveToken( request );

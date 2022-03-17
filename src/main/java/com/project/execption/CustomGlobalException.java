@@ -3,6 +3,7 @@ package com.project.execption;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -50,6 +51,15 @@ public class CustomGlobalException extends ResponseEntityExceptionHandler {
                 request.getDescription(false));
         return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException exception, WebRequest request){
+        ApiError apiError = new ApiError( new Date(),
+                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN,
+                exception.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+    }
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid( MethodArgumentNotValidException ex,
                                                                    HttpHeaders headers,
@@ -65,6 +75,17 @@ public class CustomGlobalException extends ResponseEntityExceptionHandler {
         apiError.addValidationErrors( ex.getBindingResult().getFieldErrors() );
         apiError.addValidationError( ex.getBindingResult().getGlobalErrors() );
         return new ResponseEntity<>( apiError, HttpStatus.BAD_REQUEST );
+    }
+
+    @ExceptionHandler(InvalidException.class)
+    public ResponseEntity<?> handleInvalidException(InvalidException invalidException,
+                                                    WebRequest request) {
+        ApiError apiError = new ApiError(new Date(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST,
+                invalidException.getMessage(),
+                request.getDescription(true));
+        return new ResponseEntity(apiError, HttpStatus.BAD_REQUEST);
     }
 
 }

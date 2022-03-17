@@ -33,10 +33,11 @@ public class EmployeeController {
         return new ResponseEntity<>( HttpStatus.CREATED );
     }
 
+    @PreAuthorize( "hasRole('ROLE_ADMIN') or hasRole('ROLE_HR')" )
     @RequestMapping( value = EMPLOYEES + PATH_VARIABLE_NAME, method = RequestMethod.GET )
-    public ResponseEntity<?> findALlEmployeesByName( @PathVariable( name = "name", required = false ) String query,
-                                                     @RequestParam( value = "page", defaultValue = DEFAULT_PAGE_NUMBER, required = false ) Integer page,
-                                                     @RequestParam( value = "limit", defaultValue = DEFAULT_PAGE_SIZE, required = false ) Integer limit,
+    public ResponseEntity<?> getEmployeesByName( @PathVariable( name = "name", required = false ) String query,
+                                                     @RequestParam( value = "page", defaultValue = DEFAULT_PAGE_NUMBER, required = false ) int page,
+                                                     @RequestParam( value = "limit", defaultValue = DEFAULT_PAGE_SIZE, required = false ) int limit,
                                                      @RequestParam( value = "sortBy", defaultValue = DEFAULT_SORT_BY, required = false ) String sortBy,
                                                      @RequestParam( value = "orderBy", defaultValue = DEFAULT_ORDER_BY, required = false ) String orderBy ) {
 
@@ -45,10 +46,10 @@ public class EmployeeController {
         return new ResponseEntity<>( employeeResponse, HttpStatus.OK );
 
     }
-
+    @PreAuthorize( "hasRole('ROLE_ADMIN') or hasRole('ROLE_HR')" )
     @RequestMapping( value = EMPLOYEES, method = RequestMethod.GET )
-    public ResponseEntity<?> findALlEmployees( @RequestParam( value = "page", defaultValue = DEFAULT_PAGE_NUMBER, required = false ) Integer page,
-                                               @RequestParam( value = "limit", defaultValue = DEFAULT_PAGE_SIZE, required = false ) Integer limit,
+    public ResponseEntity<?> getEmployees( @RequestParam( value = "page", defaultValue = DEFAULT_PAGE_NUMBER, required = false ) int page,
+                                               @RequestParam( value = "limit", defaultValue = DEFAULT_PAGE_SIZE, required = false ) int limit,
                                                @RequestParam( value = "sortBy", defaultValue = DEFAULT_SORT_BY, required = false ) String sortBy,
                                                @RequestParam( value = "orderBy", defaultValue = DEFAULT_ORDER_BY, required = false ) String orderBy ) {
 
@@ -60,7 +61,7 @@ public class EmployeeController {
 
     @PreAuthorize( "hasRole('ROLE_ADMIN')" )
     @RequestMapping( value = EMPLOYEES + PATH_VARIABLE_ID, method = RequestMethod.PUT )
-    public ResponseEntity<?> updateEmployee( @PathVariable( "id" ) Long id, @Valid @RequestBody Employee employee ) {
+    public ResponseEntity<?> updateEmployee( @PathVariable( "id" ) long id, @Valid @RequestBody Employee employee ) {
         Employee updatedEmployee = employeeService.updateEmployee( id, employee );
 
         return new ResponseEntity<>( updatedEmployee, HttpStatus.OK );
@@ -71,7 +72,7 @@ public class EmployeeController {
         employeeService.deleteEmployee( id );
         return new ResponseEntity<>(  HttpStatus.OK );
     }
-    private Map<String, Object> getEmployees( String query, Integer page, Integer limit, String sortBy, String orderBy ) {
+    private Map<String, Object> getEmployees( String query, int page, int limit, String sortBy, String orderBy ) {
         Sort sort = orderBy.equalsIgnoreCase( Sort.Direction.ASC.name() ) ? Sort.by( sortBy ).ascending() : Sort.by( sortBy ).descending();
         Pageable pageable = PageRequest.of( page, limit, sort );
         Page<Employee> employees = employeeService.getEmployees( query, pageable );

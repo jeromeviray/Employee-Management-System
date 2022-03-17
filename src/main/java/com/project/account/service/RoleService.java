@@ -2,8 +2,10 @@ package com.project.account.service;
 
 import com.project.account.model.AccountRole;
 
-public interface RoleService {
-    AccountRole getAccountRoleById(long id);
+import java.util.Optional;
 
-    AccountRole getAccountRoleByRoleName(String name);
+public interface RoleService {
+    Optional<AccountRole> getAccountRoleById( long id);
+
+    Optional<AccountRole> getAccountRoleByRoleName(String name);
 }

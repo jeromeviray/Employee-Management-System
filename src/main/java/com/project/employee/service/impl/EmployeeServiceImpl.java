@@ -4,19 +4,19 @@ import com.project.employee.model.Employee;
 import com.project.employee.repository.EmployeeRepository;
 import com.project.employee.service.EmployeeService;
 import com.project.execption.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
 public class EmployeeServiceImpl implements EmployeeService{
 
-    @Autowired
     private EmployeeRepository employeeRepository;
+
+    public EmployeeServiceImpl( EmployeeRepository employeeRepository ) {
+        this.employeeRepository = employeeRepository;
+    }
 
     @Override
     public Employee saveEmployee( Employee employee ) {
@@ -48,11 +48,6 @@ public class EmployeeServiceImpl implements EmployeeService{
         Page<Employee> employees = employeeRepository.findAllEmployeeByName( query, pageable );
         return new PageImpl<>(employees.getContent(), pageable, employees.getTotalElements());
     }
-
-//    @Override
-//    public Employee findEmployeeByName( String name ) {
-//        return null;
-//    }
 
     @Override
     public Employee getEmployeeById( long id ) {

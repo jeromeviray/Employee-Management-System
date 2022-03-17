@@ -4,7 +4,6 @@ import com.project.websecurity.jwtUtil.provider.JwtProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -14,7 +13,6 @@ import java.util.function.Function;
 import static com.project.common.contants.AppConstant.ACCESS_TOKEN_EXPIRATION_DATE;
 import static com.project.common.contants.AppConstant.SECRET_KEY;
 
-@Service
 public class JwtProviderImpl implements JwtProvider {
 
     @Override
